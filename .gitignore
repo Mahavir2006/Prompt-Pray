@@ -1,0 +1,24 @@
+# Environment variables (NO .env ANYWHERE)
+.env
+.env.*
+**/.env
+**/.env.*
+
+# Node dependencies (NO node_modules ANYWHERE)
+node_modules/
+**/node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+
+# Build output
+client/dist/
+dist/
+.next/
