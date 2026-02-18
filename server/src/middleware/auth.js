@@ -3,7 +3,7 @@ import store from '../config/mockStore.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'obs3rv4b1l1ty-s3cr3t-k3y-2024';
 
-// Verify JWT token
+// Verify JWT token (supports demo tokens for client-side fallback)
 export const authenticate = (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -12,6 +12,19 @@ export const authenticate = (req, res, next) => {
 
     try {
         const token = authHeader.split(' ')[1];
+
+        // Handle demo tokens (base64-encoded, prefixed with 'demo_')
+        if (token.startsWith('demo_')) {
+            try {
+                const payload = JSON.parse(atob(token.slice(5)));
+                req.user = { id: payload.id, email: payload.email, role: payload.role };
+                return next();
+            } catch {
+                return res.status(401).json({ error: 'Invalid demo token', code: 'INVALID_TOKEN' });
+            }
+        }
+
+        // Standard JWT verification
         const decoded = jwt.verify(token, JWT_SECRET);
         req.user = { id: decoded.id, email: decoded.email, role: decoded.role };
         next();

@@ -1,8 +1,11 @@
-# Environment variables (NO .env ANYWHERE)
+# Environment variables (NO .env ANYWHERE, but allow .env.example templates)
 .env
-.env.*
 **/.env
-**/.env.*
+**/.env.local
+**/.env.development
+**/.env.production
+!.env.example
+!**/.env.example
 
 # Node dependencies (NO node_modules ANYWHERE)
 node_modules/

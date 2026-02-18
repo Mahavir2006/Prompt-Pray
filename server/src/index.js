@@ -19,15 +19,37 @@ const IS_VERCEL = !!process.env.VERCEL;
 
 const app = express();
 
+// ============== Allowed Origins ==============
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'http://localhost:5000',
+    process.env.FRONTEND_URL,
+].filter(Boolean);
+
 // ============== CORS ==============
+// Handle preflight (OPTIONS) explicitly for Vercel
+app.options('*', cors({
+    origin: (origin, callback) => callback(null, true),
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
 app.use(cors({
-    origin: (origin, callback) => callback(null, true), // Allow all origins (reflect request origin)
-    credentials: true, // Allow cookies/auth headers
+    origin: (origin, callback) => callback(null, true),
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 // ============== Middleware ==============
 app.use(compression());
-app.use(helmet({ contentSecurityPolicy: false }));
+app.use(helmet({
+    contentSecurityPolicy: false,
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    crossOriginOpenerPolicy: false,
+}));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 

@@ -12,15 +12,25 @@ const getHeaders = () => {
 };
 
 async function request(url, options = {}) {
-    const res = await fetch(`${BASE_URL}${url}`, {
-        ...options,
-        headers: { ...getHeaders(), ...options.headers },
-    });
+    let res;
+    try {
+        res = await fetch(`${BASE_URL}${url}`, {
+            ...options,
+            headers: { ...getHeaders(), ...options.headers },
+        });
+    } catch (networkError) {
+        // Network failure (server down, CORS blocked, no internet)
+        throw new Error('Network error — unable to reach the server');
+    }
 
     if (res.status === 401) {
-        localStorage.removeItem('obs_token');
-        localStorage.removeItem('obs_user');
-        window.location.href = '/login';
+        // Only force-logout for real tokens; demo tokens should not redirect
+        const token = localStorage.getItem('obs_token');
+        if (token && !token.startsWith('demo_')) {
+            localStorage.removeItem('obs_token');
+            localStorage.removeItem('obs_user');
+            window.location.href = '/login';
+        }
         throw new Error('Session expired');
     }
 
