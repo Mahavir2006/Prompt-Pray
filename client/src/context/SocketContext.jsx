@@ -5,6 +5,8 @@ import { useAuth } from './AuthContext';
 
 const SocketContext = createContext(null);
 
+const API_URL = import.meta.env.VITE_API_URL || '';
+
 export const useSocket = () => {
     const ctx = useContext(SocketContext);
     if (!ctx) throw new Error('useSocket must be used within SocketProvider');
@@ -16,17 +18,33 @@ export function SocketProvider({ children }) {
     const [connected, setConnected] = useState(false);
     const [lastEvent, setLastEvent] = useState(null);
     const queryClient = useQueryClient();
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, token } = useAuth();
     const pollingRef = useRef(null);
 
     useEffect(() => {
         if (!isAuthenticated) return;
 
-        // Establish single WebSocket connection
-        const socket = io(window.location.origin, {
+        // Skip WebSocket if using demo token (no backend) or on Vercel
+        const isDemoMode = token?.startsWith('demo_');
+        if (isDemoMode) {
+            console.log('[WS] Demo mode — skipping WebSocket, using polling fallback');
+            setConnected(false);
+            // Polling fallback for demo mode
+            pollingRef.current = setInterval(() => {
+                queryClient.invalidateQueries({ queryKey: ['overview'] });
+                queryClient.invalidateQueries({ queryKey: ['alerts'] });
+            }, 30000);
+            return () => {
+                if (pollingRef.current) clearInterval(pollingRef.current);
+            };
+        }
+
+        // Connect to the backend WebSocket URL
+        const wsUrl = API_URL || window.location.origin;
+        const socket = io(wsUrl, {
             transports: ['websocket', 'polling'],
             reconnection: true,
-            reconnectionAttempts: 10,
+            reconnectionAttempts: 5,
             reconnectionDelay: 2000,
             reconnectionDelayMax: 10000,
         });
@@ -36,7 +54,6 @@ export function SocketProvider({ children }) {
         socket.on('connect', () => {
             console.log('[WS] Connected');
             setConnected(true);
-            // Clear polling fallback
             if (pollingRef.current) {
                 clearInterval(pollingRef.current);
                 pollingRef.current = null;
@@ -46,26 +63,28 @@ export function SocketProvider({ children }) {
         socket.on('disconnect', () => {
             console.log('[WS] Disconnected — activating polling fallback');
             setConnected(false);
-            // Activate polling fallback
             pollingRef.current = setInterval(() => {
                 queryClient.invalidateQueries({ queryKey: ['overview'] });
                 queryClient.invalidateQueries({ queryKey: ['alerts'] });
             }, 30000);
         });
 
+        // Give up after max reconnection attempts
+        socket.on('reconnect_failed', () => {
+            console.log('[WS] Reconnection failed — falling back to polling');
+            setConnected(false);
+        });
+
         // --- Event: metricUpdate ---
         socket.on('metricUpdate', (data) => {
             setLastEvent({ type: 'metricUpdate', data, timestamp: Date.now() });
-            // Invalidate overview cache
             queryClient.invalidateQueries({ queryKey: ['overview'] });
-            // Invalidate specific model metrics
             queryClient.invalidateQueries({ queryKey: ['metrics', data.modelId] });
         });
 
         // --- Event: alertCreated ---
         socket.on('alertCreated', (alert) => {
             setLastEvent({ type: 'alertCreated', data: alert, timestamp: Date.now() });
-            // Update alerts query cache — prepend new alert
             queryClient.setQueryData(['alerts'], (old) => {
                 if (!old) return old;
                 return {
@@ -74,7 +93,6 @@ export function SocketProvider({ children }) {
                     total: (old.total || 0) + 1,
                 };
             });
-            // Invalidate alert stats and overview
             queryClient.invalidateQueries({ queryKey: ['alertStats'] });
             queryClient.invalidateQueries({ queryKey: ['overview'] });
         });
@@ -82,7 +100,6 @@ export function SocketProvider({ children }) {
         // --- Event: alertResolved ---
         socket.on('alertResolved', ({ alertId }) => {
             setLastEvent({ type: 'alertResolved', data: { alertId }, timestamp: Date.now() });
-            // Update the specific alert in cache
             queryClient.setQueryData(['alerts'], (old) => {
                 if (!old) return old;
                 return {
@@ -98,7 +115,7 @@ export function SocketProvider({ children }) {
             socket.disconnect();
             if (pollingRef.current) clearInterval(pollingRef.current);
         };
-    }, [isAuthenticated, queryClient]);
+    }, [isAuthenticated, token, queryClient]);
 
     const subscribe = useCallback((modelId) => {
         socketRef.current?.emit('subscribe:model', modelId);
@@ -114,3 +131,4 @@ export function SocketProvider({ children }) {
         </SocketContext.Provider>
     );
 }
+
