@@ -1,5 +1,5 @@
 // Base URL: empty for local dev (Vite proxy), set VITE_API_URL for production
-const BASE_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+const BASE_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
 console.log('[API] BASE_URL:', BASE_URL);
 
 // Centralized API helper with auth headers
