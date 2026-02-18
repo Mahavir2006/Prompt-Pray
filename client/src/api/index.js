@@ -1,3 +1,6 @@
+// Base URL: empty for local dev (Vite proxy), set VITE_API_URL for production
+const BASE_URL = import.meta.env.VITE_API_URL || '';
+
 // Centralized API helper with auth headers
 const getHeaders = () => {
     const token = localStorage.getItem('obs_token');
@@ -8,7 +11,7 @@ const getHeaders = () => {
 };
 
 async function request(url, options = {}) {
-    const res = await fetch(url, {
+    const res = await fetch(`${BASE_URL}${url}`, {
         ...options,
         headers: { ...getHeaders(), ...options.headers },
     });
