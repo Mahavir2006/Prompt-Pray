@@ -1,7 +1,5 @@
 import 'dotenv/config';
 import express from 'express';
-import { createServer } from 'http';
-import { Server as SocketIOServer } from 'socket.io';
 import cors from 'cors';
 import compression from 'compression';
 import helmet from 'helmet';
@@ -14,32 +12,31 @@ import overviewRoutes from './modules/models/overview.js';
 import metricRoutes from './modules/metrics/routes.js';
 import alertRoutes from './modules/alerts/routes.js';
 import governanceRoutes from './modules/governance/routes.js';
-import { setupRealtimeHandlers } from './modules/realtime/handlers.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import connectDB from './config/database.js';
 
+const IS_VERCEL = !!process.env.VERCEL;
+
 const app = express();
-const httpServer = createServer(app);
 
-// Socket.IO setup
-const io = new SocketIOServer(httpServer, {
-    cors: {
-        origin: ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173'],
-        methods: ['GET', 'POST'],
-        credentials: true,
-    },
-    pingTimeout: 60000,
-    pingInterval: 25000,
-});
+// ============== CORS ==============
+// Build the allowed origins list dynamically
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'http://127.0.0.1:5173',
+];
+// Add the production frontend URL if set
+if (process.env.FRONTEND_URL) {
+    allowedOrigins.push(process.env.FRONTEND_URL);
+}
 
-// Store io instance on app for use in routes
-app.set('io', io);
-
-// ============== Middleware ==============
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173'],
+    origin: allowedOrigins,
     credentials: true,
 }));
+
+// ============== Middleware ==============
 app.use(compression());
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json({ limit: '10mb' }));
@@ -70,6 +67,7 @@ app.get('/api/health', (req, res) => {
         uptime: process.uptime(),
         timestamp: new Date().toISOString(),
         memory: process.memoryUsage(),
+        environment: IS_VERCEL ? 'vercel' : 'local',
     });
 });
 
@@ -77,24 +75,45 @@ app.get('/api/health', (req, res) => {
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-// ============== WebSocket ==============
-setupRealtimeHandlers(io);
-
 // ============== Start ==============
-const PORT = process.env.PORT || 5000;
+// Only start the HTTP server + WebSocket when running locally (not on Vercel)
+if (!IS_VERCEL) {
+    const { createServer } = await import('http');
+    const { Server: SocketIOServer } = await import('socket.io');
+    const { setupRealtimeHandlers } = await import('./modules/realtime/handlers.js');
 
-async function start() {
-    // Try connecting to MongoDB (falls back gracefully)
-    await connectDB();
+    const httpServer = createServer(app);
 
-    httpServer.listen(PORT, () => {
-        console.log(`\n🚀 AI Observability Server running on port ${PORT}`);
-        console.log(`   API:       http://localhost:${PORT}/api`);
-        console.log(`   WebSocket: ws://localhost:${PORT}`);
-        console.log(`   Health:    http://localhost:${PORT}/api/health\n`);
+    const io = new SocketIOServer(httpServer, {
+        cors: {
+            origin: allowedOrigins,
+            methods: ['GET', 'POST'],
+            credentials: true,
+        },
+        pingTimeout: 60000,
+        pingInterval: 25000,
     });
+
+    app.set('io', io);
+    setupRealtimeHandlers(io);
+
+    const PORT = process.env.PORT || 5000;
+
+    async function start() {
+        await connectDB();
+        httpServer.listen(PORT, () => {
+            console.log(`\n🚀 AI Observability Server running on port ${PORT}`);
+            console.log(`   API:       http://localhost:${PORT}/api`);
+            console.log(`   WebSocket: ws://localhost:${PORT}`);
+            console.log(`   Health:    http://localhost:${PORT}/api/health\n`);
+        });
+    }
+
+    start();
+} else {
+    // On Vercel: just connect DB (no listen, no WebSocket)
+    connectDB().catch(() => console.warn('[Vercel] DB connection skipped'));
 }
 
-start();
-
 export default app;
+
