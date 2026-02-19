@@ -12,6 +12,9 @@ import overviewRoutes from './modules/models/overview.js';
 import metricRoutes from './modules/metrics/routes.js';
 import alertRoutes from './modules/alerts/routes.js';
 import governanceRoutes from './modules/governance/routes.js';
+import incidentRoutes from './modules/incidents/routes.js';
+import sloRoutes from './modules/slo/routes.js';
+import reportRoutes from './modules/reports/routes.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import connectDB from './config/database.js';
 
@@ -29,12 +32,12 @@ const allowedOrigins = [
 
 // ============== CORS ==============
 // Handle preflight (OPTIONS) explicitly for Vercel
-app.options('*', cors({
-    origin: (origin, callback) => callback(null, true),
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+// app.options('*', cors({
+//     origin: (origin, callback) => callback(null, true),
+//     credentials: true,
+//     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+// }));
 
 app.use(cors({
     origin: (origin, callback) => callback(null, true),
@@ -70,6 +73,9 @@ app.use('/api/models', modelRoutes);
 app.use('/api/metrics', metricRoutes);
 app.use('/api/alerts', alertRoutes);
 app.use('/api/governance', governanceRoutes);
+app.use('/api/incidents', incidentRoutes);
+app.use('/api/slos', sloRoutes);
+app.use('/api/reports', reportRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

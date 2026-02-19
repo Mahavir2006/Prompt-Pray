@@ -11,6 +11,10 @@ const navItems = [
     { path: '/dashboard/ml-monitoring', label: 'ML Monitoring' },
     { path: '/dashboard/llm-monitoring', label: 'LLM Monitoring' },
     { path: '/dashboard/alerts', label: 'Alerts' },
+    { path: '/dashboard/incidents', label: 'Incidents' },
+    { path: '/dashboard/model-registry', label: 'Model Registry' },
+    { path: '/dashboard/slo-dashboard', label: 'SLO Dashboard' },
+    { path: '/dashboard/reports', label: 'Reports' },
     { path: '/dashboard/governance', label: 'Governance' },
 ];
 
@@ -42,6 +46,18 @@ function NavIcon({ name }) {
                 <path d="M10.268 21a2 2 0 0 0 3.464 0" />
                 <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" />
             </svg>
+        ),
+        Incidents: (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+        ),
+        'Model Registry': (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg>
+        ),
+        'SLO Dashboard': (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+        ),
+        Reports: (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></svg>
         ),
         Governance: (
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">

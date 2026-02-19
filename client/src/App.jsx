@@ -10,6 +10,10 @@ const OverviewPage = lazy(() => import('./pages/OverviewPage'));
 const MLMonitoringPage = lazy(() => import('./pages/MLMonitoringPage'));
 const LLMMonitoringPage = lazy(() => import('./pages/LLMMonitoringPage'));
 const AlertsPage = lazy(() => import('./pages/AlertsPage'));
+const IncidentsPage = lazy(() => import('./pages/IncidentsPage'));
+const ModelRegistryPage = lazy(() => import('./pages/ModelRegistryPage'));
+const SLODashboardPage = lazy(() => import('./pages/SLODashboardPage'));
+const ReportsPage = lazy(() => import('./pages/ReportsPage'));
 const GovernancePage = lazy(() => import('./pages/GovernancePage'));
 
 function LoadingFallback() {
@@ -62,6 +66,26 @@ export default function App() {
                 <Route path="alerts" element={
                     <Suspense fallback={<LoadingFallback />}>
                         <AlertsPage />
+                    </Suspense>
+                } />
+                <Route path="incidents" element={
+                    <Suspense fallback={<LoadingFallback />}>
+                        <IncidentsPage />
+                    </Suspense>
+                } />
+                <Route path="model-registry" element={
+                    <Suspense fallback={<LoadingFallback />}>
+                        <ModelRegistryPage />
+                    </Suspense>
+                } />
+                <Route path="slo-dashboard" element={
+                    <Suspense fallback={<LoadingFallback />}>
+                        <SLODashboardPage />
+                    </Suspense>
+                } />
+                <Route path="reports" element={
+                    <Suspense fallback={<LoadingFallback />}>
+                        <ReportsPage />
                     </Suspense>
                 } />
                 <Route path="governance" element={

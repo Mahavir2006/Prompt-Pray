@@ -34,6 +34,44 @@ router.get('/:modelId', authenticate, (req, res, next) => {
     }
 });
 
+// GET /api/metrics/:modelId/lineage - Get data lineage for a metric type
+router.get('/:modelId/lineage', authenticate, (req, res, next) => {
+    try {
+        const { modelId } = req.params;
+        const { type } = req.query;
+
+        const model = store.getModelById(modelId);
+        if (!model) {
+            return res.status(404).json({ error: 'Model not found', code: 'NOT_FOUND' });
+        }
+
+        if (!type) {
+            return res.status(400).json({ error: 'Metric type is required (query param: type)', code: 'VALIDATION_ERROR' });
+        }
+
+        const lineage = store.getMetricLineage(modelId, type);
+        if (!lineage) {
+            return res.status(404).json({ error: 'No lineage data found for this metric', code: 'NOT_FOUND' });
+        }
+
+        // Log sensitive data access
+        store.addAuditLog({
+            action: 'DATA_ACCESSED',
+            details: `Data lineage accessed for ${model.name} — ${type}`,
+            userId: req.user.id,
+            userName: req.user.email,
+            userRole: req.user.role,
+            modelId: model._id,
+            modelName: model.name,
+            ipAddress: req.ip,
+        });
+
+        res.json(lineage);
+    } catch (err) {
+        next(err);
+    }
+});
+
 // POST /api/metrics/ingest - Ingest new metric data point
 router.post('/ingest', authenticate, authorize('admin', 'analyst'), (req, res, next) => {
     try {
@@ -50,7 +88,7 @@ router.post('/ingest', authenticate, authorize('admin', 'analyst'), (req, res, n
         // Store metric
         const metric = store.addMetric({ modelId, type, value, environment: model.environment });
 
-        // Rule evaluation — check thresholds
+        // Rule evaluation — check thresholds and capture evidence
         const alert = evaluateRules(model, type, value);
 
         const response = { metric, alert: alert || null };
@@ -71,7 +109,7 @@ router.post('/ingest', authenticate, authorize('admin', 'analyst'), (req, res, n
     }
 });
 
-// Rule evaluation engine
+// Rule evaluation engine — now captures immutable evidence snapshot
 function evaluateRules(model, type, value) {
     const thresholds = {
         accuracy: { operator: '<', threshold: 0.90, severity: 'critical', title: 'Accuracy Drop Detected' },
@@ -91,6 +129,20 @@ function evaluateRules(model, type, value) {
     const breached = rule.operator === '<' ? value < rule.threshold : value > rule.threshold;
     if (!breached) return null;
 
+    // Build immutable evidence snapshot (Part 2 — Deterministic Alert Explainability)
+    const evidence = {
+        trigger_type: 'RULE',
+        rule_id: `RULE_${type.toUpperCase()}`,
+        rule_description: `${type} ${rule.operator === '<' ? 'dropped below' : 'exceeded'} ${rule.threshold}`,
+        metric_name: type,
+        threshold: rule.threshold,
+        operator: rule.operator,
+        observed_value: value,
+        evaluation_window: '15m',
+        timestamp: new Date(),
+        _immutable: true,
+    };
+
     return store.createAlert({
         modelId: model._id,
         modelName: model.name,
@@ -98,6 +150,7 @@ function evaluateRules(model, type, value) {
         message: `${type} ${rule.operator === '<' ? 'dropped below' : 'exceeded'} ${rule.threshold} (current: ${value})`,
         severity: rule.severity,
         rule: `${type} ${rule.operator} ${rule.threshold}`,
+        evidence,
     });
 }
 

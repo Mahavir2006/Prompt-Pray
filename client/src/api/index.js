@@ -51,13 +51,17 @@ export const overviewAPI = {
     get: () => request('/api/overview'),
 };
 
-// Models
+// Models (Model Registry)
 export const modelsAPI = {
     list: (params = {}) => {
         const qs = new URLSearchParams(params).toString();
         return request(`/api/models${qs ? '?' + qs : ''}`);
     },
     get: (id) => request(`/api/models/${id}`),
+    register: (data) => request('/api/models', { method: 'POST', body: JSON.stringify(data) }),
+    update: (id, data) => request(`/api/models/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    approve: (id) => request(`/api/models/${id}/approve`, { method: 'PATCH' }),
+    versions: (id) => request(`/api/models/${id}/versions`),
 };
 
 // Metrics
@@ -67,9 +71,10 @@ export const metricsAPI = {
         return request(`/api/metrics/${modelId}${qs ? '?' + qs : ''}`);
     },
     ingest: (data) => request('/api/metrics/ingest', { method: 'POST', body: JSON.stringify(data) }),
+    lineage: (modelId, type) => request(`/api/metrics/${modelId}/lineage?type=${type}`),
 };
 
-// Alerts
+// Alerts (with state machine + evidence)
 export const alertsAPI = {
     list: (params = {}) => {
         const qs = new URLSearchParams(params).toString();
@@ -77,8 +82,55 @@ export const alertsAPI = {
     },
     stats: () => request('/api/alerts/stats'),
     get: (id) => request(`/api/alerts/${id}`),
-    resolve: (id) => request(`/api/alerts/${id}/resolve`, { method: 'PATCH' }),
     acknowledge: (id) => request(`/api/alerts/${id}/acknowledge`, { method: 'PATCH' }),
+    investigate: (id, comment) => request(`/api/alerts/${id}/investigate`, { method: 'PATCH', body: JSON.stringify({ comment }) }),
+    resolve: (id, comment) => request(`/api/alerts/${id}/resolve`, { method: 'PATCH', body: JSON.stringify({ comment }) }),
+    evidence: (id) => request(`/api/alerts/${id}/evidence`),
+    history: (id) => request(`/api/alerts/${id}/history`),
+};
+
+// Incidents
+export const incidentsAPI = {
+    list: (params = {}) => {
+        const qs = new URLSearchParams(params).toString();
+        return request(`/api/incidents${qs ? '?' + qs : ''}`);
+    },
+    get: (id) => request(`/api/incidents/${id}`),
+    create: (data) => request('/api/incidents', { method: 'POST', body: JSON.stringify(data) }),
+    update: (id, data) => request(`/api/incidents/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
+    close: (id) => request(`/api/incidents/${id}/close`, { method: 'PATCH' }),
+    exportCSV: (id) => request(`/api/incidents/${id}/export`),
+};
+
+// SLOs
+export const sloAPI = {
+    list: (params = {}) => {
+        const qs = new URLSearchParams(params).toString();
+        return request(`/api/slos${qs ? '?' + qs : ''}`);
+    },
+    get: (id) => request(`/api/slos/${id}`),
+    create: (data) => request('/api/slos', { method: 'POST', body: JSON.stringify(data) }),
+    update: (id, data) => request(`/api/slos/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
+};
+
+// Reports
+export const reportsAPI = {
+    modelInventory: (params = {}) => {
+        const qs = new URLSearchParams(params).toString();
+        return request(`/api/reports/model-inventory${qs ? '?' + qs : ''}`);
+    },
+    alertIncidentSummary: (params = {}) => {
+        const qs = new URLSearchParams(params).toString();
+        return request(`/api/reports/alert-incident-summary${qs ? '?' + qs : ''}`);
+    },
+    slaBreach: (params = {}) => {
+        const qs = new URLSearchParams(params).toString();
+        return request(`/api/reports/sla-breach${qs ? '?' + qs : ''}`);
+    },
+    governanceActivity: (params = {}) => {
+        const qs = new URLSearchParams(params).toString();
+        return request(`/api/reports/governance-activity${qs ? '?' + qs : ''}`);
+    },
 };
 
 // Governance
@@ -89,4 +141,8 @@ export const governanceAPI = {
     },
     actions: () => request('/api/governance/actions'),
     export: (data) => request('/api/governance/export', { method: 'POST', body: JSON.stringify(data) }),
+    sensitiveAccess: (params = {}) => {
+        const qs = new URLSearchParams(params).toString();
+        return request(`/api/governance/sensitive-access${qs ? '?' + qs : ''}`);
+    },
 };
