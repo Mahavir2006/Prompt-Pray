@@ -23,8 +23,8 @@ export default function SLODashboardPage() {
         <div className="space-y-6">
             {/* Header */}
             <div>
-                <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400">SLA / SLO Dashboard</h1>
-                <p className="text-sm text-white/50 mt-1">Service level objectives & error budget tracking</p>
+                <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-brown-900/5 dark:bg-gold-100/5p-text bg-gradient-to-r from-green-400 to-blue-400">SLA / SLO Dashboard</h1>
+                <p className="text-sm text-brown-900/50 dark:text-gold-100/50 mt-1">Service level objectives & error budget tracking</p>
             </div>
 
             {/* Summary Cards */}
@@ -37,7 +37,7 @@ export default function SLODashboardPage() {
 
             {/* SLO Cards */}
             {isLoading ? (
-                <div className="glass-card p-12 text-center text-white/40">Loading SLOs…</div>
+                <div className="glass-card p-12 text-center text-brown-900/40 dark:text-gold-100/40">Loading SLOs…</div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {slos.map(slo => <SLOCard key={slo._id} slo={slo} />)}
@@ -50,7 +50,7 @@ export default function SLODashboardPage() {
 function SummaryCard({ label, value, color }) {
     return (
         <div className="glass-card p-4">
-            <p className="text-xs text-white/40">{label}</p>
+            <p className="text-xs text-brown-900/40 dark:text-gold-100/40">{label}</p>
             <p className="text-2xl font-bold mt-1" style={{ color }}>{value}</p>
         </div>
     );
@@ -137,8 +137,8 @@ function SLOCard({ slo }) {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h3 className="text-sm font-bold text-white">{slo.service_name}</h3>
-                    <p className="text-xs text-white/40 mt-0.5">{slo.metric} — Target: {slo.target}{slo.metric_unit}</p>
+                    <h3 className="text-sm font-bold text-brown-900 dark:text-gold-100">{slo.service_name}</h3>
+                    <p className="text-xs text-brown-900/40 dark:text-gold-100/40 mt-0.5">{slo.metric} — Target: {slo.target}{slo.metric_unit}</p>
                 </div>
                 <span className="px-2.5 py-1 rounded-full text-[10px] font-bold"
                     style={{ backgroundColor: `${statusColor}20`, color: statusColor, border: `1px solid ${statusColor}40` }}>
@@ -153,25 +153,25 @@ function SLOCard({ slo }) {
                 </div>
                 <div className="space-y-2 flex flex-col justify-center">
                     <div className="text-xs">
-                        <span className="text-white/40 block">Current Value</span>
-                        <span className="text-white font-bold text-lg">{slo.current_value}{slo.metric_unit}</span>
+                        <span className="text-brown-900/40 dark:text-gold-100/40 block">Current Value</span>
+                        <span className="text-brown-900 dark:text-gold-100 font-bold text-lg">{slo.current_value}{slo.metric_unit}</span>
                     </div>
                     <div className="text-xs">
-                        <span className="text-white/40 block">Burn Rate</span>
+                        <span className="text-brown-900/40 dark:text-gold-100/40 block">Burn Rate</span>
                         <span className="font-bold" style={{ color: slo.current_burn_rate > 0.8 ? '#ef4444' : slo.current_burn_rate > 0.5 ? '#f59e0b' : '#22c55e' }}>
                             {Math.round(slo.current_burn_rate * 100)}%
                         </span>
                     </div>
                     <div className="text-xs">
-                        <span className="text-white/40 block">Window</span>
-                        <span className="text-white font-medium">{slo.evaluation_window}</span>
+                        <span className="text-brown-900/40 dark:text-gold-100/40 block">Window</span>
+                        <span className="text-brown-900 dark:text-gold-100 font-medium">{slo.evaluation_window}</span>
                     </div>
                 </div>
             </div>
 
             {/* Error Budget Burn-down */}
             <div>
-                <h4 className="text-xs text-white/50 mb-1 font-semibold">Error Budget Burn-down</h4>
+                <h4 className="text-xs text-brown-900/50 dark:text-gold-100/50 mb-1 font-semibold">Error Budget Burn-down</h4>
                 <div className="h-28">
                     <ReactECharts option={burnOption} style={{ height: '100%' }} opts={{ renderer: 'canvas' }} />
                 </div>
@@ -179,10 +179,10 @@ function SLOCard({ slo }) {
 
             {/* Budget Bar */}
             <div>
-                <div className="flex justify-between text-[10px] text-white/40 mb-1">
+                <div className="flex justify-between text-[10px] text-brown-900/40 dark:text-gold-100/40 mb-1">
                     <span>Error Budget: {slo.error_budget_remaining}% / {slo.error_budget}%</span>
                 </div>
-                <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-brown-900/5 dark:bg-gold-100/5 rounded-full overflow-hidden">
                     <div className="h-full rounded-full transition-all" style={{ width: `${budgetPercent}%`, backgroundColor: statusColor }} />
                 </div>
             </div>

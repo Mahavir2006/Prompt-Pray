@@ -57,17 +57,17 @@ export default function ReportsPage() {
             {/* Header */}
             <div>
                 <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-400">Regulatory & Compliance Reports</h1>
-                <p className="text-sm text-white/50 mt-1">Generate audit-ready reports — all exports are logged in the governance trail</p>
+                <p className="text-sm text-brown-900/50 dark:text-gold-100/50 mt-1">Generate audit-ready reports — all exports are logged in the governance trail</p>
             </div>
 
             {/* Date Range Filter */}
             <div className="glass-card p-4 flex flex-wrap items-center gap-4">
-                <span className="text-sm text-white/50">Date Range:</span>
+                <span className="text-sm text-brown-900/50 dark:text-gold-100/50">Date Range:</span>
                 <input type="date" value={dateRange.startDate} onChange={e => setDateRange(d => ({ ...d, startDate: e.target.value }))}
-                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:ring-1 focus:ring-teal-500/50 focus:outline-none" />
-                <span className="text-white/30">→</span>
+                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-brown-900 dark:text-gold-100 focus:ring-1 focus:ring-teal-500/50 focus:outline-none" />
+                <span className="text-brown-900/30 dark:text-gold-100/30">→</span>
                 <input type="date" value={dateRange.endDate} onChange={e => setDateRange(d => ({ ...d, endDate: e.target.value }))}
-                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:ring-1 focus:ring-teal-500/50 focus:outline-none" />
+                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-brown-900 dark:text-gold-100 focus:ring-1 focus:ring-teal-500/50 focus:outline-none" />
             </div>
 
             {/* Report Cards */}
@@ -77,21 +77,21 @@ export default function ReportsPage() {
                         <div className="flex items-start gap-3">
                             <span className="text-3xl">{report.icon}</span>
                             <div>
-                                <h3 className="text-sm font-bold text-white">{report.title}</h3>
-                                <p className="text-xs text-white/40 mt-1">{report.desc}</p>
+                                <h3 className="text-sm font-bold text-brown-900 dark:text-gold-100">{report.title}</h3>
+                                <p className="text-xs text-brown-900/40 dark:text-gold-100/40 mt-1">{report.desc}</p>
                             </div>
                         </div>
                         <div className="flex gap-2">
                             <button onClick={() => handleGenerate(report, '')} disabled={generating === report.key}
-                                className="flex-1 py-2 rounded-lg text-xs font-medium bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all border border-white/10">
+                                className="flex-1 py-2 rounded-lg text-xs font-medium bg-white/5 hover:bg-white/10 text-brown-900/70 dark:text-gold-100/70 hover:text-brown-900 dark:text-gold-100 transition-all border border-white/10">
                                 {generating === report.key ? 'Generating…' : '👁 Preview'}
                             </button>
                             <button onClick={() => handleGenerate(report, 'csv')} disabled={generating === report.key}
-                                className="px-4 py-2 rounded-lg text-xs font-medium bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all border border-white/10">
+                                className="px-4 py-2 rounded-lg text-xs font-medium bg-white/5 hover:bg-white/10 text-brown-900/70 dark:text-gold-100/70 hover:text-brown-900 dark:text-gold-100 transition-all border border-white/10">
                                 📄 CSV
                             </button>
                             <button onClick={() => handleGenerate(report, 'pdf')} disabled={generating === report.key}
-                                className={`px-4 py-2 rounded-lg text-xs font-medium text-white transition-all bg-gradient-to-r ${report.gradient} hover:opacity-90 shadow-lg`}>
+                                className={`px-4 py-2 rounded-lg text-xs font-medium text-brown-900 dark:text-gold-100 transition-all bg-gradient-to-r ${report.gradient} hover:opacity-90 shadow-lg`}>
                                 📋 PDF
                             </button>
                         </div>
@@ -103,10 +103,10 @@ export default function ReportsPage() {
             {previewData && (
                 <div className="glass-card p-5 space-y-3">
                     <div className="flex items-center justify-between">
-                        <h3 className="text-sm font-bold text-white">Preview: {previewType}</h3>
-                        <button onClick={() => setPreviewData(null)} className="text-white/40 hover:text-white text-xs">✕ Close</button>
+                        <h3 className="text-sm font-bold text-brown-900 dark:text-gold-100">Preview: {previewType}</h3>
+                        <button onClick={() => setPreviewData(null)} className="text-brown-900/40 dark:text-gold-100/40 hover:text-brown-900 dark:text-gold-100 text-xs">✕ Close</button>
                     </div>
-                    <pre className="text-xs text-white/60 bg-black/30 rounded-lg p-4 max-h-80 overflow-auto font-mono whitespace-pre-wrap">
+                    <pre className="text-xs text-brown-900/60 dark:text-gold-100/60 bg-black/30 rounded-lg p-4 max-h-80 overflow-auto font-mono whitespace-pre-wrap">
                         {JSON.stringify(previewData, null, 2)}
                     </pre>
                 </div>

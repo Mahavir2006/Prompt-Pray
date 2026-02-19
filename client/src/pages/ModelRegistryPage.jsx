@@ -50,10 +50,10 @@ export default function ModelRegistryPage() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Model Registry</h1>
-                    <p className="text-sm text-white/50 mt-1">Banking-grade model risk management & governance</p>
+                    <p className="text-sm text-brown-900/50 dark:text-gold-100/50 mt-1">Banking-grade model risk management & governance</p>
                 </div>
                 {isAdmin && (
-                    <button onClick={() => setShowRegister(!showRegister)} className="px-4 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white shadow-lg shadow-purple-500/20 transition-all">
+                    <button onClick={() => setShowRegister(!showRegister)} className="px-4 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-brown-900 dark:text-gold-100 shadow-lg shadow-purple-500/20 transition-all">
                         + Register Model
                     </button>
                 )}
@@ -73,16 +73,16 @@ export default function ModelRegistryPage() {
                 {/* Model List */}
                 <div className="lg:col-span-2 space-y-3">
                     {isLoading ? (
-                        <div className="glass-card p-12 text-center text-white/40">Loading models…</div>
+                        <div className="glass-card p-12 text-center text-brown-900/40 dark:text-gold-100/40">Loading models…</div>
                     ) : models.length === 0 ? (
-                        <div className="glass-card p-12 text-center text-white/40">No models found</div>
+                        <div className="glass-card p-12 text-center text-brown-900/40 dark:text-gold-100/40">No models found</div>
                     ) : models.map(model => (
                         <div key={model._id} onClick={() => setSelectedModel(model._id)}
                             className={`glass-card p-4 cursor-pointer transition-all hover:ring-1 hover:ring-purple-500/30 ${selectedModel === model._id ? 'ring-1 ring-cyan-500/50' : ''}`}>
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <h3 className="font-semibold text-white">{model.name}</h3>
-                                    <p className="text-xs text-white/50 mt-1">{model.use_case || model.description}</p>
+                                    <h3 className="font-semibold text-brown-900 dark:text-gold-100">{model.name}</h3>
+                                    <p className="text-xs text-brown-900/50 dark:text-gold-100/50 mt-1">{model.use_case || model.description}</p>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Badge text={model.risk_tier} color={RISK_COLORS[model.risk_tier]} />
@@ -90,7 +90,7 @@ export default function ModelRegistryPage() {
                                     <Badge text={model.status} color={STATUS_COLORS[model.status]} />
                                 </div>
                             </div>
-                            <div className="flex gap-4 mt-3 text-xs text-white/40">
+                            <div className="flex gap-4 mt-3 text-xs text-brown-900/40 dark:text-gold-100/40">
                                 <span>v{model.version}</span>
                                 <span>{model.model_type}</span>
                                 <span>{model.business_unit}</span>
@@ -106,7 +106,7 @@ export default function ModelRegistryPage() {
                     {selectedModel && detail ? (
                         <ModelDetailPanel model={detail} isAdmin={isAdmin} onApprove={() => approveMutation.mutate(selectedModel)} isApproving={approveMutation.isPending} loading={detailLoading} />
                     ) : (
-                        <div className="glass-card p-8 text-center text-white/30">
+                        <div className="glass-card p-8 text-center text-brown-900/30 dark:text-gold-100/30">
                             <svg className="w-12 h-12 mx-auto mb-3 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                             <p className="text-sm">Select a model to view details</p>
                         </div>
@@ -120,13 +120,13 @@ export default function ModelRegistryPage() {
 /* === Sub-components === */
 
 function ModelDetailPanel({ model, isAdmin, onApprove, isApproving, loading }) {
-    if (loading) return <div className="glass-card p-8 text-center text-white/40">Loading…</div>;
+    if (loading) return <div className="glass-card p-8 text-center text-brown-900/40 dark:text-gold-100/40">Loading…</div>;
 
     return (
         <div className="glass-card p-5 space-y-5 sticky top-6">
             <div>
-                <h2 className="text-lg font-bold text-white">{model.name}</h2>
-                <p className="text-xs text-white/50 mt-1">{model.description}</p>
+                <h2 className="text-lg font-bold text-brown-900 dark:text-gold-100">{model.name}</h2>
+                <p className="text-xs text-brown-900/50 dark:text-gold-100/50 mt-1">{model.description}</p>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
@@ -143,7 +143,7 @@ function ModelDetailPanel({ model, isAdmin, onApprove, isApproving, loading }) {
             {/* Approval Action */}
             {isAdmin && !model.approved_by && (
                 <button onClick={onApprove} disabled={isApproving}
-                    className="w-full py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white transition-all disabled:opacity-50">
+                    className="w-full py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-brown-900 dark:text-gold-100 transition-all disabled:opacity-50">
                     {isApproving ? 'Approving…' : '✓ Approve for Production'}
                 </button>
             )}
@@ -151,15 +151,15 @@ function ModelDetailPanel({ model, isAdmin, onApprove, isApproving, loading }) {
             {/* Version History */}
             {model.versionHistory && model.versionHistory.length > 0 && (
                 <div>
-                    <h3 className="text-sm font-semibold text-white/70 mb-2">Version History</h3>
+                    <h3 className="text-sm font-semibold text-brown-900/70 dark:text-gold-100/70 mb-2">Version History</h3>
                     <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
                         {model.versionHistory.map((v, i) => (
                             <div key={v._id || i} className="flex items-start gap-3 text-xs">
                                 <div className="mt-1 w-2 h-2 rounded-full bg-cyan-400 flex-shrink-0" />
                                 <div>
-                                    <span className="text-white font-medium">v{v.version}</span>
-                                    <span className="text-white/40 ml-2">{new Date(v.created_at).toLocaleDateString()}</span>
-                                    <p className="text-white/50 mt-0.5">{v.change_summary}</p>
+                                    <span className="text-brown-900 dark:text-gold-100 font-medium">v{v.version}</span>
+                                    <span className="text-brown-900/40 dark:text-gold-100/40 ml-2">{new Date(v.created_at).toLocaleDateString()}</span>
+                                    <p className="text-brown-900/50 dark:text-gold-100/50 mt-0.5">{v.change_summary}</p>
                                 </div>
                             </div>
                         ))}
@@ -176,7 +176,7 @@ function RegisterForm({ onSubmit, isLoading, onCancel }) {
 
     return (
         <div className="glass-card p-5 space-y-4">
-            <h3 className="text-lg font-semibold text-white">Register New Model</h3>
+            <h3 className="text-lg font-semibold text-brown-900 dark:text-gold-100">Register New Model</h3>
             <div className="grid grid-cols-2 gap-3">
                 <FormInput label="Model Name" value={form.name} onChange={v => set('name', v)} required />
                 <FormSelect label="Type" value={form.model_type} options={['ML', 'LLM', 'Rules', 'External_API']} onChange={v => { set('model_type', v); set('type', v === 'LLM' ? 'llm' : 'ml'); }} />
@@ -189,9 +189,9 @@ function RegisterForm({ onSubmit, isLoading, onCancel }) {
             </div>
             <FormInput label="Description" value={form.description} onChange={v => set('description', v)} full />
             <div className="flex justify-end gap-3">
-                <button onClick={onCancel} className="px-4 py-2 rounded-lg text-sm text-white/60 hover:text-white transition-colors">Cancel</button>
+                <button onClick={onCancel} className="px-4 py-2 rounded-lg text-sm text-brown-900/60 dark:text-gold-100/60 hover:text-brown-900 dark:text-gold-100 transition-colors">Cancel</button>
                 <button onClick={() => onSubmit(form)} disabled={isLoading || !form.name}
-                    className="px-6 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-purple-600 to-cyan-600 text-white disabled:opacity-50">
+                    className="px-6 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-purple-600 to-cyan-600 text-brown-900 dark:text-gold-100 disabled:opacity-50">
                     {isLoading ? 'Registering…' : 'Register'}
                 </button>
             </div>
@@ -210,8 +210,8 @@ function Badge({ text, color }) {
 function InfoField({ label, value, color }) {
     return (
         <div className="text-xs">
-            <span className="text-white/40 block">{label}</span>
-            <span className="text-white font-medium" style={color ? { color } : {}}>{value || '—'}</span>
+            <span className="text-brown-900/40 dark:text-gold-100/40 block">{label}</span>
+            <span className="text-brown-900 dark:text-gold-100 font-medium" style={color ? { color } : {}}>{value || '—'}</span>
         </div>
     );
 }
@@ -219,7 +219,7 @@ function InfoField({ label, value, color }) {
 function FilterSelect({ label, value, options, onChange }) {
     return (
         <select value={value} onChange={e => onChange(e.target.value)}
-            className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white/80 focus:ring-1 focus:ring-purple-500/50 focus:outline-none">
+            className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-brown-900/80 dark:text-gold-100/80 focus:ring-1 focus:ring-purple-500/50 focus:outline-none">
             <option value="">{label}: All</option>
             {options.filter(Boolean).map(o => <option key={o} value={o}>{o}</option>)}
         </select>
@@ -229,9 +229,9 @@ function FilterSelect({ label, value, options, onChange }) {
 function FormInput({ label, value, onChange, required, full }) {
     return (
         <div className={full ? 'col-span-2' : ''}>
-            <label className="block text-xs text-white/50 mb-1">{label}{required && ' *'}</label>
+            <label className="block text-xs text-brown-900/50 dark:text-gold-100/50 mb-1">{label}{required && ' *'}</label>
             <input value={value} onChange={e => onChange(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:ring-1 focus:ring-purple-500/50 focus:outline-none" />
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-brown-900 dark:text-gold-100 focus:ring-1 focus:ring-purple-500/50 focus:outline-none" />
         </div>
     );
 }
@@ -239,9 +239,9 @@ function FormInput({ label, value, onChange, required, full }) {
 function FormSelect({ label, value, options, onChange }) {
     return (
         <div>
-            <label className="block text-xs text-white/50 mb-1">{label}</label>
+            <label className="block text-xs text-brown-900/50 dark:text-gold-100/50 mb-1">{label}</label>
             <select value={value} onChange={e => onChange(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:ring-1 focus:ring-purple-500/50 focus:outline-none">
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-brown-900 dark:text-gold-100 focus:ring-1 focus:ring-purple-500/50 focus:outline-none">
                 {options.map(o => <option key={o} value={o}>{o}</option>)}
             </select>
         </div>

@@ -25,16 +25,51 @@ const DEPLOYMENT_ENVS = ['dev', 'uat', 'prod'];
 const MODEL_STATUSES = ['active', 'paused', 'retired'];
 
 const ML_MODELS = [
-    { _id: generateId(), name: 'Fraud Detection v3.2', type: 'ml', model_type: 'ML', environment: 'production', deployment_env: 'prod', status: 'active', description: 'Real-time transaction fraud scoring model', version: '3.2.1', use_case: 'Transaction fraud scoring', business_unit: 'Risk Management', risk_tier: 'High', owner: USERS[1].name, approved_by: USERS[0].name, approval_date: new Date(Date.now() - 95 * 86400000), createdAt: new Date(Date.now() - 90 * 86400000), updatedAt: new Date(Date.now() - 10 * 86400000) },
-    { _id: generateId(), name: 'Credit Risk Classifier', type: 'ml', model_type: 'ML', environment: 'production', deployment_env: 'prod', status: 'active', description: 'Consumer credit risk assessment', version: '2.1.0', use_case: 'Credit decisioning', business_unit: 'Lending', risk_tier: 'High', owner: USERS[1].name, approved_by: USERS[0].name, approval_date: new Date(Date.now() - 185 * 86400000), createdAt: new Date(Date.now() - 180 * 86400000), updatedAt: new Date(Date.now() - 30 * 86400000) },
-    { _id: generateId(), name: 'AML Transaction Monitor', type: 'ml', model_type: 'ML', environment: 'staging', deployment_env: 'uat', status: 'active', description: 'Anti-money laundering pattern detection', version: '1.8.3', use_case: 'AML compliance screening', business_unit: 'Compliance', risk_tier: 'High', owner: USERS[1].name, approved_by: null, approval_date: null, createdAt: new Date(Date.now() - 60 * 86400000), updatedAt: new Date(Date.now() - 5 * 86400000) },
-    { _id: generateId(), name: 'Customer Churn Predictor', type: 'ml', model_type: 'ML', environment: 'production', deployment_env: 'prod', status: 'degraded', description: 'Predicts customer churn probability', version: '4.0.0', use_case: 'Customer retention', business_unit: 'Marketing', risk_tier: 'Medium', owner: USERS[1].name, approved_by: USERS[0].name, approval_date: new Date(Date.now() - 125 * 86400000), createdAt: new Date(Date.now() - 120 * 86400000), updatedAt: new Date(Date.now() - 2 * 86400000) },
+    {
+        _id: generateId(), name: 'Fraud Detection v3.2', type: 'ml', model_type: 'ML', environment: 'production', deployment_env: 'prod', status: 'active',
+        description: 'Real-time transaction fraud scoring model', version: '3.2.1', use_case: 'Transaction fraud scoring', business_unit: 'Risk Management', risk_tier: 'High',
+        owner: USERS[1].name, approved_by: USERS[0].name, approval_date: new Date(Date.now() - 95 * 86400000), createdAt: new Date(Date.now() - 90 * 86400000), updatedAt: new Date(Date.now() - 10 * 86400000),
+        baselines: { accuracy: 0.94, latency: 45, throughput: 1200, drift_score: 0.05, data_quality: 0.99 }
+    },
+    {
+        _id: generateId(), name: 'Credit Risk Classifier', type: 'ml', model_type: 'ML', environment: 'production', deployment_env: 'prod', status: 'active',
+        description: 'Consumer credit risk assessment', version: '2.1.0', use_case: 'Credit decisioning', business_unit: 'Lending', risk_tier: 'High',
+        owner: USERS[1].name, approved_by: USERS[0].name, approval_date: new Date(Date.now() - 185 * 86400000), createdAt: new Date(Date.now() - 180 * 86400000), updatedAt: new Date(Date.now() - 30 * 86400000),
+        baselines: { accuracy: 0.88, latency: 120, throughput: 400, drift_score: 0.12, data_quality: 0.95 }
+    },
+    {
+        _id: generateId(), name: 'AML Transaction Monitor', type: 'ml', model_type: 'ML', environment: 'staging', deployment_env: 'uat', status: 'active',
+        description: 'Anti-money laundering pattern detection', version: '1.8.3', use_case: 'AML compliance screening', business_unit: 'Compliance', risk_tier: 'High',
+        owner: USERS[1].name, approved_by: null, approval_date: null, createdAt: new Date(Date.now() - 60 * 86400000), updatedAt: new Date(Date.now() - 5 * 86400000),
+        baselines: { accuracy: 0.82, latency: 200, throughput: 800, drift_score: 0.08, data_quality: 0.92 }
+    },
+    {
+        _id: generateId(), name: 'Customer Churn Predictor', type: 'ml', model_type: 'ML', environment: 'production', deployment_env: 'prod', status: 'degraded',
+        description: 'Predicts customer churn probability', version: '4.0.0', use_case: 'Customer retention', business_unit: 'Marketing', risk_tier: 'Medium',
+        owner: USERS[1].name, approved_by: USERS[0].name, approval_date: new Date(Date.now() - 125 * 86400000), createdAt: new Date(Date.now() - 120 * 86400000), updatedAt: new Date(Date.now() - 2 * 86400000),
+        baselines: { accuracy: 0.76, latency: 85, throughput: 1500, drift_score: 0.22, data_quality: 0.88 }
+    },
 ];
 
 const LLM_MODELS = [
-    { _id: generateId(), name: 'Customer Support Bot', type: 'llm', model_type: 'LLM', environment: 'production', deployment_env: 'prod', status: 'active', description: 'GPT-4 powered customer service assistant', version: '2.0.0', use_case: 'Customer support automation', business_unit: 'Operations', risk_tier: 'Medium', owner: USERS[1].name, approved_by: USERS[0].name, approval_date: new Date(Date.now() - 50 * 86400000), createdAt: new Date(Date.now() - 45 * 86400000), updatedAt: new Date(Date.now() - 3 * 86400000) },
-    { _id: generateId(), name: 'Document Summarizer', type: 'llm', model_type: 'LLM', environment: 'production', deployment_env: 'prod', status: 'active', description: 'Legal document summarization pipeline', version: '1.3.0', use_case: 'Legal document processing', business_unit: 'Legal', risk_tier: 'Medium', owner: USERS[1].name, approved_by: USERS[0].name, approval_date: new Date(Date.now() - 35 * 86400000), createdAt: new Date(Date.now() - 30 * 86400000), updatedAt: new Date(Date.now() - 7 * 86400000) },
-    { _id: generateId(), name: 'Compliance Q&A Engine', type: 'llm', model_type: 'LLM', environment: 'staging', deployment_env: 'uat', status: 'active', description: 'Regulatory compliance query answering', version: '0.9.1', use_case: 'Regulatory compliance queries', business_unit: 'Compliance', risk_tier: 'Low', owner: USERS[1].name, approved_by: null, approval_date: null, createdAt: new Date(Date.now() - 15 * 86400000), updatedAt: new Date(Date.now() - 1 * 86400000) },
+    {
+        _id: generateId(), name: 'Customer Support Bot', type: 'llm', model_type: 'LLM', environment: 'production', deployment_env: 'prod', status: 'active',
+        description: 'GPT-4 powered customer service assistant', version: '2.0.0', use_case: 'Customer support automation', business_unit: 'Operations', risk_tier: 'Medium',
+        owner: USERS[1].name, approved_by: USERS[0].name, approval_date: new Date(Date.now() - 50 * 86400000), createdAt: new Date(Date.now() - 45 * 86400000), updatedAt: new Date(Date.now() - 3 * 86400000),
+        baselines: { token_usage: 1200, latency: 450, hallucination_rate: 0.02, toxicity_score: 0.001, cost_per_request: 0.005 }
+    },
+    {
+        _id: generateId(), name: 'Document Summarizer', type: 'llm', model_type: 'LLM', environment: 'production', deployment_env: 'prod', status: 'active',
+        description: 'Legal document summarization pipeline', version: '1.3.0', use_case: 'Legal document processing', business_unit: 'Legal', risk_tier: 'Medium',
+        owner: USERS[1].name, approved_by: USERS[0].name, approval_date: new Date(Date.now() - 35 * 86400000), createdAt: new Date(Date.now() - 30 * 86400000), updatedAt: new Date(Date.now() - 7 * 86400000),
+        baselines: { token_usage: 4500, latency: 1200, hallucination_rate: 0.05, toxicity_score: 0.005, cost_per_request: 0.015 }
+    },
+    {
+        _id: generateId(), name: 'Compliance Q&A Engine', type: 'llm', model_type: 'LLM', environment: 'staging', deployment_env: 'uat', status: 'active',
+        description: 'Regulatory compliance query answering', version: '0.9.1', use_case: 'Regulatory compliance queries', business_unit: 'Compliance', risk_tier: 'Low',
+        owner: USERS[1].name, approved_by: null, approval_date: null, createdAt: new Date(Date.now() - 15 * 86400000), updatedAt: new Date(Date.now() - 1 * 86400000),
+        baselines: { token_usage: 800, latency: 300, hallucination_rate: 0.08, toxicity_score: 0.002, cost_per_request: 0.003 }
+    },
 ];
 
 const ALL_MODELS = [...ML_MODELS, ...LLM_MODELS];
@@ -73,7 +108,7 @@ function generateVersionHistory() {
 // ML metric types
 const ML_METRIC_TYPES = ['accuracy', 'precision', 'recall', 'f1_score', 'latency', 'throughput', 'drift_score', 'data_quality'];
 // LLM metric types
-const LLM_METRIC_TYPES = ['token_usage', 'latency', 'hallucination_rate', 'toxicity_score', 'cost_per_request', 'throughput', 'context_relevance'];
+const LLM_METRIC_TYPES = ['token_usage', 'latency', 'hallucination_rate', 'toxicity_score', 'cost_per_request', 'throughput', 'context_relevance', 'answer_relevance'];
 
 const ALERT_SEVERITIES = ['critical', 'high', 'medium', 'low'];
 // Banking-grade: OPEN -> ACKNOWLEDGED -> INVESTIGATING -> RESOLVED
@@ -93,7 +128,16 @@ const SOURCE_SYSTEMS = ['kafka-stream-prod', 'batch-etl-dwh', 'api-gateway-west'
 const AGGREGATION_METHODS = ['raw', 'avg_1m', 'avg_5m', 'p95_1m', 'sum_1h', 'median_5m'];
 const RETENTION_POLICIES = ['30d', '90d', '180d', '365d', '7y'];
 
-// --------------- Generate Time-Series Metrics (with lineage) ---------------
+// --------------- Generate Time-Series Metrics (Random Walk) ---------------
+
+// Helper to get bounded random walk value
+function walkValue(current, min, max, volatility) {
+    const delta = (Math.random() - 0.5) * volatility;
+    let next = current + delta;
+    if (next < min) next = min + (min - next);
+    if (next > max) next = max - (next - max);
+    return next;
+}
 
 function generateMetrics() {
     const metrics = [];
@@ -102,37 +146,62 @@ function generateMetrics() {
 
     for (const model of ALL_MODELS) {
         const metricTypes = model.type === 'ml' ? ML_METRIC_TYPES : LLM_METRIC_TYPES;
+        // Use defined baseline or defaults
+        const baselines = model.baselines || {};
+
         for (const type of metricTypes) {
             const sourceSystem = SOURCE_SYSTEMS[Math.floor(Math.random() * SOURCE_SYSTEMS.length)];
             const aggregationMethod = AGGREGATION_METHODS[Math.floor(Math.random() * AGGREGATION_METHODS.length)];
             const retentionPolicy = RETENTION_POLICIES[Math.floor(Math.random() * RETENTION_POLICIES.length)];
 
+            // Initialize current value based on baseline or defaults
+            let currentValue = baselines[type];
+            if (currentValue === undefined) {
+                // Generics defaults if no baseline set
+                switch (type) {
+                    case 'accuracy': currentValue = 0.85; break;
+                    case 'precision': currentValue = 0.82; break;
+                    case 'recall': currentValue = 0.80; break;
+                    case 'f1_score': currentValue = 0.81; break;
+                    case 'latency': currentValue = 100; break;
+                    case 'throughput': currentValue = 500; break;
+                    case 'drift_score': currentValue = 0.1; break;
+                    case 'data_quality': currentValue = 0.95; break;
+                    case 'token_usage': currentValue = 1000; break;
+                    case 'hallucination_rate': currentValue = 0.05; break;
+                    case 'toxicity_score': currentValue = 0.01; break;
+                    case 'cost_per_request': currentValue = 0.005; break;
+                    case 'context_relevance': currentValue = 0.8; break;
+                    case 'answer_relevance': currentValue = 0.85; break;
+                    default: currentValue = 50;
+                }
+            }
+
+            // Define volatility (how much it can change per step) and bounds
+            let volatility = currentValue * 0.05; // 5% shift max
+            let min = 0;
+            let max = 1;
+
+            if (['latency', 'throughput', 'token_usage'].includes(type)) {
+                volatility = currentValue * 0.15; // Higher volatility for counts/latency
+                max = 10000;
+            } else if (['cost_per_request'].includes(type)) {
+                volatility = 0.001;
+                max = 1;
+            }
+
+            // Generate history walking forward
             for (let h = hoursBack; h >= 0; h--) {
                 const timestamp = new Date(nowMs - h * 3600000);
-                let value;
 
-                switch (type) {
-                    case 'accuracy': value = 0.92 + Math.random() * 0.06 - 0.02; break;
-                    case 'precision': value = 0.88 + Math.random() * 0.08 - 0.03; break;
-                    case 'recall': value = 0.85 + Math.random() * 0.1 - 0.04; break;
-                    case 'f1_score': value = 0.87 + Math.random() * 0.08 - 0.03; break;
-                    case 'latency': value = 50 + Math.random() * 150; break;
-                    case 'throughput': value = 800 + Math.random() * 400; break;
-                    case 'drift_score': value = Math.random() * 0.3; break;
-                    case 'data_quality': value = 0.95 + Math.random() * 0.05 - 0.02; break;
-                    case 'token_usage': value = 500 + Math.random() * 3000; break;
-                    case 'hallucination_rate': value = Math.random() * 0.15; break;
-                    case 'toxicity_score': value = Math.random() * 0.05; break;
-                    case 'cost_per_request': value = 0.002 + Math.random() * 0.01; break;
-                    case 'context_relevance': value = 0.7 + Math.random() * 0.25; break;
-                    default: value = Math.random() * 100;
-                }
+                // Apply random walk for next value
+                currentValue = walkValue(currentValue, min, max, volatility);
 
                 metrics.push({
                     _id: generateId(),
                     modelId: model._id,
                     type,
-                    value: Math.round(value * 10000) / 10000,
+                    value: Math.round(currentValue * 10000) / 10000,
                     timestamp,
                     environment: model.environment,
                     // Data lineage fields
@@ -603,6 +672,12 @@ class MockStore {
         return latest;
     }
 
+    getLastMetric(modelId, type) {
+        return this.metrics
+            .filter(m => m.modelId === modelId && m.type === type)
+            .sort((a, b) => b.timestamp - a.timestamp)[0] || null;
+    }
+
     addMetric(metric) {
         const entry = {
             _id: generateId(),
@@ -944,10 +1019,13 @@ class MockStore {
         const criticalAlerts = this.alerts.filter(a => (a.status === 'open' || a.status === 'active') && a.severity === 'critical').length;
         const highAlerts = this.alerts.filter(a => (a.status === 'open' || a.status === 'active') && a.severity === 'high').length;
 
-        // Weighted risk score: critical=40, high=25, medium=10, low=5 (max 100)
-        const riskRaw = (criticalAlerts * 40) + (highAlerts * 25) +
-            (this.alerts.filter(a => (a.status === 'open' || a.status === 'active') && a.severity === 'medium').length * 10) +
-            (this.alerts.filter(a => (a.status === 'open' || a.status === 'active') && a.severity === 'low').length * 5);
+        // Weighted risk score: critical=25, high=15, medium=5, low=1 (max 100)
+        // Scaled down to be less sensitive (allowing more alerts before hitting 100)
+        const riskRaw = (criticalAlerts * 25) + (highAlerts * 15) +
+            (this.alerts.filter(a => (a.status === 'open' || a.status === 'active') && a.severity === 'medium').length * 5) +
+            (this.alerts.filter(a => (a.status === 'open' || a.status === 'active') && a.severity === 'low').length * 1) +
+            15; // Base risk baseline
+
         const riskScore = Math.min(100, riskRaw);
 
         // System health
