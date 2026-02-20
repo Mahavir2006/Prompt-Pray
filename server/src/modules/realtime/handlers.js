@@ -45,18 +45,31 @@ function startMetricSimulation(io) {
         const metricTypes = model.type === 'ml' ? mlMetricTypes : llmMetricTypes;
         const type = metricTypes[Math.floor(Math.random() * metricTypes.length)];
 
-        // Generate a value
-        let value;
-        switch (type) {
-            case 'accuracy': value = 0.88 + Math.random() * 0.10; break;
-            case 'latency': value = 40 + Math.random() * 180; break;
-            case 'throughput': value = 700 + Math.random() * 500; break;
-            case 'drift_score': value = Math.random() * 0.35; break;
-            case 'token_usage': value = 400 + Math.random() * 3500; break;
-            case 'hallucination_rate': value = Math.random() * 0.15; break;
-            case 'cost_per_request': value = 0.001 + Math.random() * 0.012; break;
-            default: value = Math.random() * 100;
+        // Get last value for random walk
+        const lastMetric = store.getLastMetric(model._id, type);
+        let currentValue = lastMetric ? lastMetric.value : 0.5;
+
+        // Define volatility (how much it can change per step) and bounds
+        let volatility = currentValue * 0.05; // 5% shift max
+        let min = 0;
+        let max = 1;
+
+        if (['latency', 'throughput', 'token_usage'].includes(type)) {
+            volatility = currentValue * 0.15;
+            max = 10000;
+        } else if (['cost_per_request'].includes(type)) {
+            volatility = 0.001;
+            max = 1;
         }
+
+        // Apply random walk
+        const delta = (Math.random() - 0.5) * volatility;
+        let value = currentValue + delta;
+
+        // Clamp logic
+        if (value < min) value = min + (min - value);
+        if (value > max) value = max - (value - max);
+
         value = Math.round(value * 10000) / 10000;
 
         // Store metric

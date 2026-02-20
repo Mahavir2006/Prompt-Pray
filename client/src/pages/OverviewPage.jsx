@@ -59,13 +59,20 @@ const RiskGauge = memo(function RiskGauge({ score }) {
             },
             title: { offsetCenter: [0, '50%'], fontSize: 12, color: isDark ? '#a4a4a4' : '#8b7355' },
             data: [{ value: score, name: getLabel(score) }],
+            radius: '90%',
+            center: ['50%', '55%'],
         }],
     }), [score, isDark]);
 
     return (
-        <div className="glass-card p-4">
-            <h3 className="text-sm font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>System Risk Score</h3>
-            <ReactEChartsCore option={option} style={{ height: 200 }} opts={{ renderer: 'svg' }} />
+        <div className="glass-card p-4 flex flex-col items-center justify-between" style={{ minHeight: '320px' }}>
+            <div className="w-full text-left">
+                <h3 className="text-sm font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>System Risk Score</h3>
+            </div>
+            <ReactEChartsCore option={option} style={{ height: 220, width: '100%' }} opts={{ renderer: 'svg' }} />
+            <p className="text-xs text-center px-4 mt-2" style={{ color: 'var(--text-faint)' }}>
+                Composite risk score based on active alerts, model performance drift, and infrastructure latency.
+            </p>
         </div>
     );
 });
