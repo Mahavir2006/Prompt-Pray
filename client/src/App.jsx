@@ -15,6 +15,7 @@ const ModelRegistryPage = lazy(() => import('./pages/ModelRegistryPage'));
 const SLODashboardPage = lazy(() => import('./pages/SLODashboardPage'));
 const ReportsPage = lazy(() => import('./pages/ReportsPage'));
 const GovernancePage = lazy(() => import('./pages/GovernancePage'));
+const LoanPredictionPage = lazy(() => import('./pages/LoanPredictionPage'));
 
 function LoadingFallback() {
     return (
@@ -91,6 +92,11 @@ export default function App() {
                 <Route path="governance" element={
                     <Suspense fallback={<LoadingFallback />}>
                         <GovernancePage />
+                    </Suspense>
+                } />
+                <Route path="loan-prediction" element={
+                    <Suspense fallback={<LoadingFallback />}>
+                        <LoanPredictionPage />
                     </Suspense>
                 } />
             </Route>

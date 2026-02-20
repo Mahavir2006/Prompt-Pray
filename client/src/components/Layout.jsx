@@ -10,6 +10,7 @@ const navItems = [
     { path: '/dashboard', label: 'Overview', end: true },
     { path: '/dashboard/ml-monitoring', label: 'ML Monitoring' },
     { path: '/dashboard/llm-monitoring', label: 'LLM Monitoring' },
+    { path: '/dashboard/loan-prediction', label: 'Loan Prediction' },
     { path: '/dashboard/alerts', label: 'Alerts' },
     { path: '/dashboard/incidents', label: 'Incidents' },
     { path: '/dashboard/model-registry', label: 'Model Registry' },
@@ -39,6 +40,13 @@ function NavIcon({ name }) {
                 <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
                 <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
                 <line x1="12" x2="12" y1="19" y2="22" />
+            </svg>
+        ),
+        'Loan Prediction': (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="2" />
+                <line x1="2" y1="10" x2="22" y2="10" />
+                <path d="M6 15h.01M10 15h4" />
             </svg>
         ),
         Alerts: (

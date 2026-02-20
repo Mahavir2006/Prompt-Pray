@@ -146,3 +146,13 @@ export const governanceAPI = {
         return request(`/api/governance/sensitive-access${qs ? '?' + qs : ''}`);
     },
 };
+
+// Loan Prediction ML API
+export const loanAPI = {
+    predict: (data) => request('/api/loan/predict', { method: 'POST', body: JSON.stringify(data) }),
+    predictBatch: (applications) => request('/api/loan/predict/batch', { method: 'POST', body: JSON.stringify({ applications }) }),
+    modelInfo: () => request('/api/loan/model/info'),
+    modelSummary: () => request('/api/loan/model/summary'),
+    health: () => request('/api/loan/health'),
+    train: () => request('/api/loan/train', { method: 'POST' }),
+};

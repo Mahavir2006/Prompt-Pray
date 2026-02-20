@@ -1,0 +1,65 @@
+{
+  "trained_at": "2026-02-19T20:10:06.715353",
+  "n_train": 201,
+  "n_test": 68,
+  "features": [
+    "age",
+    "income",
+    "credit_score",
+    "gender",
+    "occupation",
+    "education_level",
+    "marital_status"
+  ],
+  "target": "loan_status",
+  "label_map": {
+    "Approved": 1,
+    "Denied": 0
+  },
+  "model_params": {
+    "bootstrap": true,
+    "ccp_alpha": 0.0,
+    "class_weight": "balanced",
+    "criterion": "gini",
+    "max_depth": 8,
+    "max_features": "sqrt",
+    "max_leaf_nodes": null,
+    "max_samples": null,
+    "min_impurity_decrease": 0.0,
+    "min_samples_leaf": 2,
+    "min_samples_split": 4,
+    "min_weight_fraction_leaf": 0.0,
+    "monotonic_cst": null,
+    "n_estimators": 200,
+    "n_jobs": -1,
+    "oob_score": false,
+    "random_state": 42,
+    "verbose": 0,
+    "warm_start": false
+  },
+  "training_metrics": {
+    "accuracy": 0.9412,
+    "precision": 0.94,
+    "recall": 0.9792,
+    "f1": 0.9592,
+    "roc_auc": 0.9823,
+    "confusion_matrix": [
+      [
+        17,
+        3
+      ],
+      [
+        1,
+        47
+      ]
+    ],
+    "n_test": 68,
+    "cv_f1_mean": 0.9711,
+    "cv_f1_std": 0.021,
+    "top_numerical_importances": {
+      "age": 0.0936,
+      "income": 0.2994,
+      "credit_score": 0.2204
+    }
+  }
+}

@@ -15,6 +15,7 @@ import governanceRoutes from './modules/governance/routes.js';
 import incidentRoutes from './modules/incidents/routes.js';
 import sloRoutes from './modules/slo/routes.js';
 import reportRoutes from './modules/reports/routes.js';
+import loanRoutes from './modules/loan/routes.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import connectDB from './config/database.js';
 
@@ -76,6 +77,7 @@ app.use('/api/governance', governanceRoutes);
 app.use('/api/incidents', incidentRoutes);
 app.use('/api/slos', sloRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/loan', loanRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
